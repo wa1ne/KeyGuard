@@ -90,7 +90,7 @@ def remove_service_agree(message):
   bot.delete_message(message.chat.id, message.message_id-1)
   bot.send_message(message.chat.id, f"🧐 Вы уверены, что хотите удалить `{message.text}`?\n Подтвердите действие кнопкой ниже\.", reply_markup=keyboard.markupremoveservice, parse_mode='MarkdownV2')
 
-def get_password(message): #Получение пароля
+def get_password(message):
   bot.delete_message(message.chat.id,message.message_id)
   with open('icons/get.png', 'rb') as get:
     bot.send_photo(message.chat.id, get, caption="""
@@ -158,7 +158,6 @@ def edit_key(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
-  #bot.answer_callback_query(callback_query_id=call.id, text='Действие выполнено!')
   data = call.data
   userid = call.from_user.id
   if data == 'to_menu':
