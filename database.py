@@ -25,6 +25,13 @@ def add_password(user_id, service, password, tag):
     connection.commit()
     connection.close()
 
+def add_password_notag(user_id, service, password):
+    connection = sqlite3.connect('passbase.db')
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO Passwords (id, service, password) VALUES (?, ?, ?)', (user_id, service.lower(), password))
+    connection.commit()
+    connection.close()
+
 def get_password(user_id, service):
     connection = sqlite3.connect('passbase.db')
     cursor = connection.cursor()
@@ -36,7 +43,6 @@ def get_password(user_id, service):
 def remove_service(user_id, service):
     connection = sqlite3.connect('passbase.db')
     cursor = connection.cursor()
-    print(user_id, service)
     cursor.execute('DELETE FROM Passwords WHERE id = ? and service = ?', (user_id, service))
     connection.commit()
     connection.close()

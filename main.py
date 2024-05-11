@@ -3,7 +3,7 @@ import os
 import keyboard
 import crypter
 import database
-TOKEN = 'your token'
+TOKEN = '6937610129:AAHvGN2EhxHy0uzlNAPdUcl4OAtPb0L4A60'
 bot = telebot.TeleBot(TOKEN)
 
 cryptkeylib = {}
@@ -40,7 +40,8 @@ def info(message):
  `2\.` Получение пароля:
 Чтобы получить пароль от необходимого вам сервиса, уже добавленного вами в бота воспользуйтесь кнопкой: *"🕹️ Запросить пароль"* в меню\. Введите интересующий вас сервис и бот ответит вам сообщением с паролем\.
                    
- `3\.` Для удобства понимания имеющихся в базе бота паролей воспользуйтесь кнопкой: *"📃 Все пароли"* в меню\. Бот отправит вам список подключенных вами сервисов\.
+ `3\.` Получение всех подключенных сервисов:
+Для удобства понимания имеющихся в базе бота паролей воспользуйтесь кнопкой: *"📃 Все пароли"* в меню\. Бот отправит вам список подключенных вами сервисов\.
                    
 😊 Приятного пользования\!
 """, reply_markup=keyboard.markupbackandpass, parse_mode='MarkdownV2')
@@ -62,12 +63,12 @@ def handle_password_entry(message):
       encryptedpassword, tag = crypter.encrypt(password, hashed_key)
       database.add_password(message.from_user.id, service, encryptedpassword, tag)
     else:
-      database.add_password(message.from_user.id, service, password)
+      database.add_password_notag(message.from_user.id, service, password)
     bot.send_message(message.chat.id, "✅ Пароль успешно добавлен!")
   except ValueError:
-    bot.send_message(message.chat.id, "❗ Неверный формат\. Используйте формат `service:password`\.", reply_markup=keyboard.buttonbacktoadd, parse_mode='MarkdownV2')
+    bot.send_message(message.chat.id, "❗ Неверный формат\. Используйте формат `service:password`\.", reply_markup=keyboard.markupmenu, parse_mode='MarkdownV2')
   except Exception as e:
-    bot.send_message(message.chat.id, f"❗ Произошла ошибка: {str(e)}", reply_markup=keyboard.buttonbacktoadd)
+    bot.send_message(message.chat.id, f"❗ Произошла ошибка: {str(e)}", reply_markup=keyboard.markupmenu)
 
 def pass_list(message, userid):
   bot.delete_message(message.chat.id, message.message_id)
@@ -75,11 +76,10 @@ def pass_list(message, userid):
   if services_string != '':
     with open('icons/list.png', 'rb') as list:
       bot.send_photo(message.chat.id, list, caption=f"""
-  📄 Список ваших паролей:
-  <pre><code>{services_string}</code></pre>
+  📄 Список ваших сервисов:\n<pre><code>{services_string}</code></pre>
   """, reply_markup=keyboard.markupbacklist, parse_mode='HTML')
   else:
-    bot.send_message(message.chat.id, '❗ Пароли отсутствуют!', reply_markup=keyboard.markupaddmenu2)
+    bot.send_message(message.chat.id, '❗ Пароли отсутствуют!', reply_markup=keyboard.markupmenu)
 
 def remove_service_message(message):
   bot.delete_message(message.chat.id, message.message_id)
@@ -91,7 +91,7 @@ def remove_service_agree(message):
   bot.send_message(message.chat.id, f"🧐 Вы уверены, что хотите удалить `{message.text}`?\n Подтвердите действие кнопкой ниже\.", reply_markup=keyboard.markupremoveservice, parse_mode='MarkdownV2')
 
 def get_password(message):
-  bot.delete_message(message.chat.id,message.message_id)
+  bot.delete_message(message.chat.id, message.message_id)
   with open('icons/get.png', 'rb') as get:
     bot.send_photo(message.chat.id, get, caption="""
 📄 Введите необходимый сервис или ключ по которому вы добавляли необходимый пароль
@@ -110,9 +110,9 @@ def handle_password_get(message):
       else:
         bot.send_message(message.chat.id, f'🔐 Ваш пароль: ```{pass_text[0]}```', parse_mode='MarkdownV2')
     else:
-      bot.send_message(message.chat.id, f'❗ Пароль не найден', reply_markup=keyboard.markupbacktoget, parse_mode='MarkdownV2')
+      bot.send_message(message.chat.id, f'❗ Пароль не найден', reply_markup=keyboard.markupmenu, parse_mode='MarkdownV2')
   except Exception as e:
-    bot.send_message(message.chat.id, f"❗ Произошла ошибка: {str(e)}", reply_markup=keyboard.buttonbacktoadd)
+    bot.send_message(message.chat.id, f"❗ Произошла ошибка: {str(e)}", reply_markup=keyboard.markupmenu)
 
 def key_menu(message, user_id):
   bot.delete_message(message.chat.id,message.message_id)
@@ -179,7 +179,7 @@ def query_handler(call):
       remove_key_message(call.message)
     else:
       bot.delete_message(call.message.chat.id, call.message.message_id)
-      bot.send_message(call.message.chat.id, '❗ Ключ шифрования отсутствует!', reply_markup=keyboard.markuptokeymenu)
+      bot.send_message(call.message.chat.id, '❗ Ключ шифрования отсутствует!', reply_markup=keyboard.markupmenu)
   elif data == 'remove_service':
     remove_service_message(call.message)
   elif data == 'agree_to_remove_key':

@@ -1,10 +1,10 @@
 import telebot
 
 markup = telebot.types.InlineKeyboardMarkup()
-button1 = telebot.types.InlineKeyboardButton("⚙️ Настройки", callback_data='to_info')
+button1 = telebot.types.InlineKeyboardButton("⚙️ Инструкция", callback_data='to_info')
 button2 = telebot.types.InlineKeyboardButton("➕ Добавить пароль", callback_data='add_pass')
 markup.row(button1, button2)
-button3 = telebot.types.InlineKeyboardButton("📃 Все пароли", callback_data='pass_list')
+button3 = telebot.types.InlineKeyboardButton("📃 Список сервисов", callback_data='pass_list')
 button4 = telebot.types.InlineKeyboardButton("🕹️ Запросить пароль", callback_data='get_pass')
 markup.row(button3, button4)
 

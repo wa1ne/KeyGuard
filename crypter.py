@@ -13,7 +13,6 @@ def encrypt(data, key):
     cipher = Cipher(algorithms.AES(key), modes.GCM(iv), backend=default_backend())
     encryptor = cipher.encryptor()
     encrypted_data = encryptor.update(data.encode()) + encryptor.finalize()
-    #print('TAG length:',len(encryptor.tag), encryptor.tag)
     return iv + encrypted_data, encryptor.tag
 
 def decrypt(encrypted_data, key, tag):
