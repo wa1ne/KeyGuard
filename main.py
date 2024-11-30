@@ -3,7 +3,7 @@ import os
 import keyboard
 import crypter
 import database
-TOKEN = '6937610129:AAHvGN2EhxHy0uzlNAPdUcl4OAtPb0L4A60'
+TOKEN = ''
 bot = telebot.TeleBot(TOKEN)
 
 cryptkeylib = {}
